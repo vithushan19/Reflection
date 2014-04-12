@@ -49,7 +49,7 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <com.facebook.scrumptious.FullListView
+        <com.facebook.reflection.FullListView
             android:id="@+id/selection_list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
             android:text="@string/announce"
             android:gravity="center" />
         
-    <fragment android:name="com.facebook.scrumptious.PostFragment"
+    <fragment android:name="com.facebook.reflection.PostFragment"
               android:id="@+id/post_fragment"
               android:layout_weight="1"
               android:layout_width="0dp"
