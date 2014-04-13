@@ -259,7 +259,7 @@ public class SelectionFragment extends Fragment {
         // the native open graph share dialog.
         if (session != null && session.isOpened()) {
         	//Log.e(TAG,"new intent myactivitylist?");
-        	Intent intent = new Intent(getActivity(), MyListActivity.class);
+        	Intent intent = new Intent(getActivity(), SwipeActivity.class);
             startActivity(intent);
         	//handleGraphApiAnnounce();
         } else {
