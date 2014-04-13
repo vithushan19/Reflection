@@ -17,6 +17,10 @@
 package com.facebook.reflection;
 
 
+import java.util.Arrays;
+
+import com.facebook.widget.LoginButton;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -47,6 +51,9 @@ public class SplashFragment extends Fragment {
                 }
             }
         });
+        
+        LoginButton authButton = (LoginButton) view.findViewById(R.id.login_button);
+        authButton.setReadPermissions(Arrays.asList("user_status", "friends_status"));
 
         return view;
     }

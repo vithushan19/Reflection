@@ -23,6 +23,7 @@ import com.facebook.reflection.R.string;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -49,6 +50,7 @@ public class SwipeActivity extends FragmentActivity implements ActionBar.TabList
      * time.
      */
     ViewPager mViewPager;
+    String result;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,9 @@ public class SwipeActivity extends FragmentActivity implements ActionBar.TabList
         // of the app.
         mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
 
+        
+        Intent intent = getIntent();
+        result = intent.getStringExtra("result");
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
 
@@ -68,6 +73,7 @@ public class SwipeActivity extends FragmentActivity implements ActionBar.TabList
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mAppSectionsPagerAdapter.setResult(result);
         mViewPager.setAdapter(mAppSectionsPagerAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -109,10 +115,15 @@ public class SwipeActivity extends FragmentActivity implements ActionBar.TabList
      */
     public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
+    	private String result;
+    	
         public AppSectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
+        public void setResult(String res) {
+        	result = res;
+        }
         @Override
         public Fragment getItem(int i) {
             switch (i) {
@@ -121,6 +132,7 @@ public class SwipeActivity extends FragmentActivity implements ActionBar.TabList
                     Fragment fragment = new DummySectionFragment();
                     Bundle args = new Bundle();
                     args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);
+                    args.putString("result", result);
                     fragment.setArguments(args);
                     return fragment;
             }
@@ -143,14 +155,14 @@ public class SwipeActivity extends FragmentActivity implements ActionBar.TabList
     public static class DummySectionFragment extends Fragment {
 
         public static final String ARG_SECTION_NUMBER = "section_number";
-
+        
+        
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_section_dummy, container, false);
             Bundle args = getArguments();
-            ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-                    getString(R.string.dummy_section_text, args.getInt(ARG_SECTION_NUMBER)));
+            ((TextView) rootView.findViewById(android.R.id.text1)).setText(args.getString("result"));
             return rootView;
         }
     }

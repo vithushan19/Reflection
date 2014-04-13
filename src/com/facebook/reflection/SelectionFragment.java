@@ -67,6 +67,8 @@ public class SelectionFragment extends Fragment {
 
     private static final int REAUTH_ACTIVITY_CODE = 100;
     private static final String PERMISSION = "publish_actions";
+    
+    private String result;
 
     private Button announceButton;
     private ListView listView;
@@ -260,6 +262,7 @@ public class SelectionFragment extends Fragment {
         if (session != null && session.isOpened()) {
         	//Log.e(TAG,"new intent myactivitylist?");
         	Intent intent = new Intent(getActivity(), SwipeActivity.class);
+        	intent.putExtra("result", result);
             startActivity(intent);
         	//handleGraphApiAnnounce();
         } else {
@@ -686,9 +689,32 @@ public class SelectionFragment extends Fragment {
             selectedUsers = ((ReflectionApplication) getActivity().getApplication()).getSelectedUsers();
             setUsersText();
             notifyDataChanged();
+            String friendId = selectedUsers.get(0).getId();
+            getPosts(friendId);
         }
 
-        @Override
+        private void getPosts(String friendId) {
+            selectedUsers = ((ReflectionApplication) getActivity().getApplication()).getSelectedUsers();
+            String userId = selectedUsers.get(0).getId();
+            String fqlQuery = "SELECT message, time FROM status WHERE uid = " + userId + " ORDER BY time";
+              Bundle params = new Bundle();
+              params.putString("q", fqlQuery);
+              Session session = Session.getActiveSession();
+              Request request = new Request(session,
+                  "/fql",                         
+                  params,                         
+                  HttpMethod.GET,                 
+                  new Request.Callback(){         
+                      public void onCompleted(Response response) {
+                          Log.i(TAG, "Result: " + response.toString());
+                          result = response.toString();
+                      }                  
+              }); 
+              Request.executeBatchAsync(request);
+    
+		}
+
+		@Override
         protected void populateOGAction(OpenGraphAction action) {
             if (selectedUsers != null) {
                 action.setTags(selectedUsers);
