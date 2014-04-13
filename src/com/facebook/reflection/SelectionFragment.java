@@ -231,7 +231,7 @@ public class SelectionFragment extends Fragment {
      * Resets the view to the initial defaults.
      */
     private void init(Bundle savedInstanceState) {
-        announceButton.setEnabled(false);
+        
 
         listElements = new ArrayList<BaseListElement>();
         listElements.add(new PeopleListElement(0));
@@ -258,7 +258,10 @@ public class SelectionFragment extends Fragment {
         // if we have a session, then use the graph API to directly publish, otherwise use
         // the native open graph share dialog.
         if (session != null && session.isOpened()) {
-            handleGraphApiAnnounce();
+        	//Log.e(TAG,"new intent myactivitylist?");
+        	Intent intent = new Intent(getActivity(), MyListActivity.class);
+            startActivity(intent);
+        	//handleGraphApiAnnounce();
         } else {
             handleNativeShareAnnounce();
         }
