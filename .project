@@ -34,6 +34,7 @@
 		<link>
 			<name>libs</name>
 			<type>2</type>
+<<<<<<< HEAD
 			<locationURI>copy_PARENT/libs</locationURI>
 		</link>
 	</linkedResources>
@@ -43,4 +44,9 @@
 			<value>$%7BPARENT-4-ECLIPSE_HOME%7D</value>
 		</variable>
 	</variableList>
+=======
+			<locationURI>PARENT-2-PROJECT_LOC/libs</locationURI>
+		</link>
+	</linkedResources>
+>>>>>>> origin/development
 </projectDescription>
