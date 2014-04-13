@@ -39,7 +39,7 @@
     <string name="error_unknown">An Unknown Error Occured!</string>
     <string name="no_location_error">Please enable GPS</string>
     <string name="exception">Exception: %1$s</string>
-    <string name="action_people">Whose Post Is It Anyways? / Slippin\'</string>
+    <string name="action_people">Pick a Friend</string>
     <string name="dummy_section_text">Section %1d is just a dummy section.</string>
     <string name="demo_external_activity">Demo External Activity</string>
     <string name="demo_collection">Demo Collection</string>

@@ -716,8 +716,7 @@ public class SelectionFragment extends Fragment {
         private void setUsersText() {
             String text = null;
             if (selectedUsers != null) {
-                text = String.format(getResources().getString(R.string.friends_selected),
-                        selectedUsers.get(0).getName());
+                text = selectedUsers.get(0).getName();
             }
             if (text == null) {
                 text = getResources().getString(R.string.action_people_default);
