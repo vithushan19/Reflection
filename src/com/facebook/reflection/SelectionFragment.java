@@ -815,44 +815,4 @@ public class SelectionFragment extends Fragment {
         }
     }
 
-    private class ActionListAdapter extends ArrayAdapter<BaseListElement> {
-        private List<BaseListElement> listElements;
-
-        public ActionListAdapter(Context context, int resourceId, List<BaseListElement> listElements) {
-            super(context, resourceId, listElements);
-            this.listElements = listElements;
-            for (int i = 0; i < listElements.size(); i++) {
-                listElements.get(i).setAdapter(this);
-            }
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = convertView;
-            if (view == null) {
-                LayoutInflater inflater =
-                        (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.listitem, null);
-            }
-
-            BaseListElement listElement = listElements.get(position);
-            if (listElement != null) {
-                view.setOnClickListener(listElement.getOnClickListener());
-                ImageView icon = (ImageView) view.findViewById(R.id.icon);
-                TextView text1 = (TextView) view.findViewById(R.id.text1);
-                TextView text2 = (TextView) view.findViewById(R.id.text2);
-                if (icon != null) {
-                    icon.setImageDrawable(listElement.getIcon());
-                }
-                if (text1 != null) {
-                    text1.setText(listElement.getText1());
-                }
-                if (text2 != null) {
-                    text2.setText(listElement.getText2());
-                }
-            }
-            return view;
-        }
-
-    }
 }
