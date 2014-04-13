@@ -221,7 +221,7 @@ containing a value of this type.
         public static final int icon=0x7f020026;
     }
     public static final class id {
-        public static final int announce_button=0x7f040022;
+        public static final int announce_button=0x7f040023;
         public static final int com_facebook_login_activity_progress_bar=0x7f040005;
         public static final int com_facebook_picker_activity_circle=0x7f040004;
         public static final int com_facebook_picker_checkbox=0x7f040007;
@@ -243,17 +243,17 @@ containing a value of this type.
         public static final int com_facebook_usersettingsfragment_logo_image=0x7f040015;
         public static final int com_facebook_usersettingsfragment_profile_name=0x7f040016;
         public static final int icon=0x7f040018;
+        public static final int label=0x7f04001f;
         public static final int large=0x7f040002;
         public static final int login_button=0x7f040026;
         public static final int normal=0x7f040001;
         public static final int picker_fragment=0x7f04001e;
         public static final int picker_subtitle=0x7f040012;
-        public static final int post_fragment=0x7f040023;
         public static final int profile_name=0x7f040025;
         public static final int selectionFragment=0x7f04001b;
-        public static final int selection_list=0x7f040021;
-        public static final int selection_profile_pic=0x7f04001f;
-        public static final int selection_user_name=0x7f040020;
+        public static final int selection_list=0x7f040022;
+        public static final int selection_profile_pic=0x7f040020;
+        public static final int selection_user_name=0x7f040021;
         public static final int skip_login_button=0x7f040027;
         public static final int small=0x7f040000;
         public static final int splashFragment=0x7f04001c;
@@ -280,8 +280,9 @@ containing a value of this type.
         public static final int listitem=0x7f03000e;
         public static final int main=0x7f03000f;
         public static final int pickers=0x7f030010;
-        public static final int selection=0x7f030011;
-        public static final int splash=0x7f030012;
+        public static final int rowlayout=0x7f030011;
+        public static final int selection=0x7f030012;
+        public static final int splash=0x7f030013;
     }
     public static final class string {
         public static final int action_eating=0x7f07001d;

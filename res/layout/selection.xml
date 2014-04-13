@@ -67,11 +67,6 @@
             android:text="@string/announce"
             android:gravity="center" />
         
-    <fragment android:name="com.facebook.scrumptious.PostFragment"
-              android:id="@+id/post_fragment"
-              android:layout_weight="1"
-              android:layout_width="0dp"
-              android:layout_height="match_parent" />
 
     </LinearLayout>
 </ScrollView>
