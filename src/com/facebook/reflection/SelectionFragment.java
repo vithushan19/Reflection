@@ -137,7 +137,7 @@ public class SelectionFragment extends Fragment {
         profilePictureView = (ProfilePictureView) view.findViewById(R.id.selection_profile_pic);
         profilePictureView.setCropped(true);
         userNameView = (TextView) view.findViewById(R.id.selection_user_name);
-        announceButton = (Button) view.findViewById(R.id.announce_button);
+        announceButton = (Button) view.findViewById(R.id.get_posts_button);
         listView = (ListView) view.findViewById(R.id.selection_list);
         
 
@@ -235,7 +235,6 @@ public class SelectionFragment extends Fragment {
 
         listElements = new ArrayList<BaseListElement>();
         listElements.add(new PeopleListElement(0));
-        
 
         if (savedInstanceState != null) {
             for (BaseListElement listElement : listElements) {
@@ -482,25 +481,20 @@ public class SelectionFragment extends Fragment {
     }
 
     private void showSuccessResponse(String postId) {
-        String dialogBody;
-        if (postId != null) {
-            dialogBody = String.format(getString(R.string.result_dialog_text_with_id), postId);
-        } else {
-            dialogBody = getString(R.string.result_dialog_text_default);
-        }
-        showResultDialog(dialogBody);
+        Log.e(TAG,"showSuccessResponse");
     }
 
     private void showCancelResponse() {
-        showResultDialog(getString(R.string.result_dialog_text_canceled));
+        Log.e(TAG,"ShowCancelResponse");
     }
 
     private void showResultDialog(String dialogBody) {
-        new AlertDialog.Builder(getActivity())
+        /*new AlertDialog.Builder(getActivity())
                 .setPositiveButton(R.string.result_dialog_button_text, null)
                 .setTitle(R.string.result_dialog_title)
                 .setMessage(dialogBody)
-                .show();
+                .show();*/
+    	Log.e(TAG,"ShowCancelResponse");
     }
 
     private void handleError(FacebookRequestError error) {
@@ -615,133 +609,47 @@ public class SelectionFragment extends Fragment {
         String getId();
     }
 
-    private class EatListElement extends BaseListElement {
+    private class ActionListAdapter extends ArrayAdapter<BaseListElement> {
+        private List<BaseListElement> listElements;
 
-        private static final String FOOD_KEY = "food";
-        private static final String FOOD_URL_KEY = "food_url";
-
-        private final String[] foodChoices;
-        private final String[] foodUrls;
-        private String foodChoiceUrl = null;
-        private String foodChoice = null;
-
-        public EatListElement(int requestCode) {
-            super(getActivity().getResources().getDrawable(R.drawable.action_eating),
-                    getActivity().getResources().getString(R.string.action_eating),
-                    getActivity().getResources().getString(R.string.action_eating_default),
-                    requestCode);
-            foodChoices = getActivity().getResources().getStringArray(R.array.food_types);
-            foodUrls = getActivity().getResources().getStringArray(R.array.food_og_urls);
+        public ActionListAdapter(Context context, int resourceId, List<BaseListElement> listElements) {
+            super(context, resourceId, listElements);
+            this.listElements = listElements;
+            for (int i = 0; i < listElements.size(); i++) {
+                listElements.get(i).setAdapter(this);
+            }
         }
 
         @Override
-        protected View.OnClickListener getOnClickListener() {
-            return new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showMealOptions();
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = convertView;
+            if (view == null) {
+                LayoutInflater inflater =
+                        (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.listitem, null);
+            }
+
+            BaseListElement listElement = listElements.get(position);
+            if (listElement != null) {
+                view.setOnClickListener(listElement.getOnClickListener());
+                ImageView icon = (ImageView) view.findViewById(R.id.icon);
+                TextView text1 = (TextView) view.findViewById(R.id.text1);
+                TextView text2 = (TextView) view.findViewById(R.id.text2);
+                if (icon != null) {
+                    icon.setImageDrawable(listElement.getIcon());
                 }
-            };
-        }
-
-        @Override
-        protected void populateOGAction(OpenGraphAction action) {
-            if (foodChoice != null && foodChoice.length() > 0) {
-                EatAction eatAction = action.cast(EatAction.class);
-                eatAction.setImageUrls(Arrays.asList(DEFAULT_ACTION_IMAGE_URL));
-                if (foodChoiceUrl != null && foodChoiceUrl.length() > 0) {
-                    MealGraphObject meal = GraphObject.Factory.create(MealGraphObject.class);
-                    meal.setUrl(foodChoiceUrl);
-                    eatAction.setMeal(meal);
-                } else {
-                    MealGraphObject meal = OpenGraphObject.Factory.createForPost(MealGraphObject.class,
-                            MEAL_OBJECT_TYPE);
-                    meal.setTitle(foodChoice);
-                    eatAction.setMeal(meal);
+                if (text1 != null) {
+                    text1.setText(listElement.getText1());
+                }
+                if (text2 != null) {
+                    text2.setText(listElement.getText2());
                 }
             }
+            return view;
         }
 
-        @Override
-        protected void onSaveInstanceState(Bundle bundle) {
-            if (foodChoice != null && foodChoiceUrl != null) {
-                bundle.putString(FOOD_KEY, foodChoice);
-                bundle.putString(FOOD_URL_KEY, foodChoiceUrl);
-            }
-        }
-
-        @Override
-        protected boolean restoreState(Bundle savedState) {
-            String food = savedState.getString(FOOD_KEY);
-            String foodUrl = savedState.getString(FOOD_URL_KEY);
-            if (food != null && foodUrl != null) {
-                foodChoice = food;
-                foodChoiceUrl = foodUrl;
-                setFoodText();
-                return true;
-            }
-            return false;
-        }
-
-        private void showMealOptions() {
-            String title = getActivity().getResources().getString(R.string.select_meal);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(title).
-                    setCancelable(true).
-                    setItems(foodChoices, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            foodChoiceUrl = foodUrls[i];
-                            if (foodChoiceUrl.length() == 0) {
-                                getCustomFood();
-                            } else {
-                                foodChoice = foodChoices[i];
-                                setFoodText();
-                                notifyDataChanged();
-                            }
-                        }
-                    });
-            builder.show();
-        }
-
-        private void getCustomFood() {
-            String title = getActivity().getResources().getString(R.string.enter_meal);
-            final EditText input = new EditText(getActivity());
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(title)
-                    .setCancelable(true)
-                    .setView(input)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            foodChoice = input.getText().toString();
-                            setFoodText();
-                            notifyDataChanged();
-                        }
-                    })
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                        }
-                    });
-            AlertDialog dialog = builder.create();
-            // always popup the keyboard when the alert dialog shows
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-            dialog.show();
-        }
-
-        private void setFoodText() {
-            if (foodChoice != null && foodChoice.length() > 0) {
-                setText2(foodChoice);
-                announceButton.setEnabled(true);
-            } else {
-                setText2(getActivity().getResources().getString(R.string.action_eating_default));
-                announceButton.setEnabled(false);
-            }
-        }
     }
-
+    
     private class PeopleListElement extends BaseListElement {
 
         private static final String FRIENDS_KEY = "friends";
@@ -805,16 +713,8 @@ public class SelectionFragment extends Fragment {
         private void setUsersText() {
             String text = null;
             if (selectedUsers != null) {
-                if (selectedUsers.size() == 1) {
-                    text = String.format(getResources().getString(R.string.single_user_selected),
-                            selectedUsers.get(0).getName());
-                } else if (selectedUsers.size() == 2) {
-                    text = String.format(getResources().getString(R.string.two_users_selected),
-                            selectedUsers.get(0).getName(), selectedUsers.get(1).getName());
-                } else if (selectedUsers.size() > 2) {
-                    text = String.format(getResources().getString(R.string.multiple_users_selected),
-                            selectedUsers.get(0).getName(), (selectedUsers.size() - 1));
-                }
+                text = String.format(getResources().getString(R.string.friends_selected),
+                        selectedUsers.get(0).getName());
             }
             if (text == null) {
                 text = getResources().getString(R.string.action_people_default);
@@ -840,7 +740,7 @@ public class SelectionFragment extends Fragment {
             return null;
         }
 
-        private List<GraphUser> restoreByteArray(byte[] bytes) {
+        private List<GraphUser> restoreByteArray (byte[] bytes) {
             try {
                 @SuppressWarnings("unchecked")
                 List<String> usersAsString =
@@ -863,239 +763,5 @@ public class SelectionFragment extends Fragment {
             }
             return null;
         }
-    }
-
-    private class LocationListElement extends BaseListElement {
-
-        private static final String PLACE_KEY = "place";
-
-        private GraphPlace selectedPlace = null;
-
-        public LocationListElement(int requestCode) {
-            super(getActivity().getResources().getDrawable(R.drawable.action_location),
-                    getActivity().getResources().getString(R.string.action_location),
-                    getActivity().getResources().getString(R.string.action_location_default),
-                    requestCode);
-        }
-
-        @Override
-        protected View.OnClickListener getOnClickListener() {
-            return new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (Session.getActiveSession() != null &&
-                            Session.getActiveSession().isOpened()) {
-                        startPickerActivity(PickerActivity.PLACE_PICKER, getRequestCode());
-                    } else {
-                        activity.showSettingsFragment();
-                    }
-                }
-            };
-        }
-
-        @Override
-        protected void onActivityResult(Intent data) {
-            selectedPlace = ((ReflectionApplication) getActivity().getApplication()).getSelectedPlace();
-            setPlaceText();
-            notifyDataChanged();
-        }
-
-        @Override
-        protected void populateOGAction(OpenGraphAction action) {
-            if (selectedPlace != null) {
-                action.setPlace(selectedPlace);
-            }
-        }
-
-        @Override
-        protected void onSaveInstanceState(Bundle bundle) {
-            if (selectedPlace != null) {
-                bundle.putString(PLACE_KEY, selectedPlace.getInnerJSONObject().toString());
-            }
-        }
-
-        @Override
-        protected boolean restoreState(Bundle savedState) {
-            String place = savedState.getString(PLACE_KEY);
-            if (place != null) {
-                try {
-                    selectedPlace = GraphObject.Factory
-                            .create(new JSONObject(place), GraphPlace.class);
-                    setPlaceText();
-                    return true;
-                } catch (JSONException e) {
-                    Log.e(TAG, "Unable to deserialize place.", e);
-                }
-            }
-            return false;
-        }
-
-        private void setPlaceText() {
-            String text = null;
-            if (selectedPlace != null) {
-                text = selectedPlace.getName();
-            }
-            if (text == null) {
-                text = getResources().getString(R.string.action_location_default);
-            }
-            setText2(text);
-        }
-
-    }
-
-    private class PhotoListElement extends BaseListElement {
-        private static final int CAMERA = 0;
-        private static final int GALLERY = 1;
-        private static final String PHOTO_URI_KEY = "photo_uri";
-        private static final String TEMP_URI_KEY = "temp_uri";
-        private static final String FILE_PREFIX = "scrumptious_img_";
-        private static final String FILE_SUFFIX = ".jpg";
-
-        private Uri tempUri = null;
-
-        public PhotoListElement(int requestCode) {
-            super(getActivity().getResources().getDrawable(R.drawable.action_photo),
-                    getActivity().getResources().getString(R.string.action_photo),
-                    getActivity().getResources().getString(R.string.action_photo_default),
-                    requestCode);
-            photoUri = null;
-        }
-
-        @Override
-        protected View.OnClickListener getOnClickListener() {
-            return new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showPhotoChoice();
-                }
-            };
-        }
-
-        @Override
-        protected void onActivityResult(Intent data) {
-            if (tempUri != null) {
-                photoUri = tempUri;
-            } else if (data != null) {
-                photoUri = data.getData();
-            }
-            setPhotoText();
-        }
-
-        @Override
-        protected void populateOGAction(OpenGraphAction action) {
-        }
-
-        @Override
-        protected void onSaveInstanceState(Bundle bundle) {
-            if (photoUri != null) {
-                bundle.putParcelable(PHOTO_URI_KEY, photoUri);
-            }
-            if (tempUri != null) {
-                bundle.putParcelable(TEMP_URI_KEY, tempUri);
-            }
-        }
-
-        @Override
-        protected boolean restoreState(Bundle savedState) {
-            photoUri = savedState.getParcelable(PHOTO_URI_KEY);
-            tempUri = savedState.getParcelable(TEMP_URI_KEY);
-            setPhotoText();
-            return true;
-        }
-
-        private void showPhotoChoice() {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            CharSequence camera = getResources().getString(R.string.action_photo_camera);
-            CharSequence gallery = getResources().getString(R.string.action_photo_gallery);
-            builder.setCancelable(true).
-                    setItems(new CharSequence[] {camera, gallery}, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if (i == CAMERA) {
-                                startCameraActivity();
-                            } else if (i == GALLERY) {
-                                startGalleryActivity();
-                            }
-                        }
-                    });
-            builder.show();
-        }
-
-        private void setPhotoText() {
-            if (photoUri == null) {
-                setText2(getResources().getString(R.string.action_photo_default));
-            } else {
-                setText2(getResources().getString(R.string.action_photo_ready));
-            }
-        }
-
-        private void startCameraActivity() {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            tempUri = getTempUri();
-            if (tempUri != null) {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
-            }
-            startActivityForResult(intent, getRequestCode());
-        }
-
-        private void startGalleryActivity() {
-            tempUri = null;
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("image/*");
-            String selectPicture = getResources().getString(R.string.select_picture);
-            startActivityForResult(Intent.createChooser(intent, selectPicture), getRequestCode());
-        }
-
-        private Uri getTempUri() {
-            String imgFileName = FILE_PREFIX + System.currentTimeMillis() + FILE_SUFFIX;
-
-            // Note: on an emulator, you might need to create the "Pictures" directory in /mnt/sdcard first
-            //       % adb shell
-            //       % mkdir /mnt/sdcard/Pictures
-            File image = new File(
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), imgFileName);
-            return Uri.fromFile(image);
-        }
-    }
-
-    private class ActionListAdapter extends ArrayAdapter<BaseListElement> {
-        private List<BaseListElement> listElements;
-
-        public ActionListAdapter(Context context, int resourceId, List<BaseListElement> listElements) {
-            super(context, resourceId, listElements);
-            this.listElements = listElements;
-            for (int i = 0; i < listElements.size(); i++) {
-                listElements.get(i).setAdapter(this);
-            }
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = convertView;
-            if (view == null) {
-                LayoutInflater inflater =
-                        (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.listitem, null);
-            }
-
-            BaseListElement listElement = listElements.get(position);
-            if (listElement != null) {
-                view.setOnClickListener(listElement.getOnClickListener());
-                ImageView icon = (ImageView) view.findViewById(R.id.icon);
-                TextView text1 = (TextView) view.findViewById(R.id.text1);
-                TextView text2 = (TextView) view.findViewById(R.id.text2);
-                if (icon != null) {
-                    icon.setImageDrawable(listElement.getIcon());
-                }
-                if (text1 != null) {
-                    text1.setText(listElement.getText1());
-                }
-                if (text2 != null) {
-                    text2.setText(listElement.getText2());
-                }
-            }
-            return view;
-        }
-
     }
 }

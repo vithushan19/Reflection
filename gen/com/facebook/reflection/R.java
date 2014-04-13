@@ -8,10 +8,6 @@
 package com.facebook.reflection;
 
 public final class R {
-    public static final class array {
-        public static final int food_og_urls=0x7f090001;
-        public static final int food_types=0x7f090000;
-    }
     public static final class attr {
         /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
@@ -221,7 +217,6 @@ containing a value of this type.
         public static final int icon=0x7f020026;
     }
     public static final class id {
-        public static final int announce_button=0x7f040022;
         public static final int com_facebook_login_activity_progress_bar=0x7f040005;
         public static final int com_facebook_picker_activity_circle=0x7f040004;
         public static final int com_facebook_picker_checkbox=0x7f040007;
@@ -242,6 +237,7 @@ containing a value of this type.
         public static final int com_facebook_usersettingsfragment_login_button=0x7f040017;
         public static final int com_facebook_usersettingsfragment_logo_image=0x7f040015;
         public static final int com_facebook_usersettingsfragment_profile_name=0x7f040016;
+        public static final int get_posts_button=0x7f040022;
         public static final int icon=0x7f040018;
         public static final int large=0x7f040002;
         public static final int login_button=0x7f040025;
@@ -283,21 +279,11 @@ containing a value of this type.
         public static final int splash=0x7f030012;
     }
     public static final class string {
-        public static final int action_eating=0x7f07001d;
-        public static final int action_eating_default=0x7f070021;
-        public static final int action_location=0x7f07001e;
-        public static final int action_location_default=0x7f070022;
-        public static final int action_people=0x7f07001f;
-        public static final int action_people_default=0x7f070023;
-        public static final int action_photo=0x7f070020;
-        public static final int action_photo_camera=0x7f070026;
-        public static final int action_photo_default=0x7f070024;
-        public static final int action_photo_gallery=0x7f070027;
-        public static final int action_photo_ready=0x7f070025;
-        public static final int announce=0x7f070028;
+        public static final int action_people=0x7f07002f;
+        public static final int action_people_default=0x7f07001d;
         public static final int app_id=0x7f07001a;
         public static final int app_name=0x7f070019;
-        public static final int cancel=0x7f070043;
+        public static final int cancel=0x7f070022;
         public static final int com_facebook_choose_friends=0x7f07000f;
         public static final int com_facebook_dialogloginactivity_ok_button=0x7f070000;
         public static final int com_facebook_internet_permission_error_message=0x7f070013;
@@ -323,34 +309,24 @@ containing a value of this type.
         public static final int com_facebook_usersettingsfragment_log_in_button=0x7f070008;
         public static final int com_facebook_usersettingsfragment_logged_in=0x7f070009;
         public static final int com_facebook_usersettingsfragment_not_logged_in=0x7f07000a;
-        public static final int enter_meal=0x7f07002c;
-        public static final int error_authentication_reopen=0x7f07003c;
-        public static final int error_authentication_retry=0x7f07003b;
-        public static final int error_bad_request=0x7f07003f;
-        public static final int error_dialog_button_text=0x7f070037;
-        public static final int error_dialog_default_text=0x7f070038;
-        public static final int error_dialog_title=0x7f070036;
-        public static final int error_permission=0x7f07003d;
-        public static final int error_server=0x7f07003e;
-        public static final int error_unknown=0x7f070040;
-        public static final int exception=0x7f070041;
+        public static final int error_authentication_reopen=0x7f070028;
+        public static final int error_authentication_retry=0x7f070027;
+        public static final int error_bad_request=0x7f07002b;
+        public static final int error_dialog_button_text=0x7f070024;
+        public static final int error_dialog_default_text=0x7f070026;
+        public static final int error_dialog_title=0x7f070023;
+        public static final int error_permission=0x7f070029;
+        public static final int error_server=0x7f07002a;
+        public static final int error_unknown=0x7f07002c;
+        public static final int exception=0x7f07002e;
+        public static final int friends_selected=0x7f07001e;
         public static final int get_started=0x7f07001b;
-        public static final int login=0x7f070029;
-        public static final int multiple_users_selected=0x7f070035;
-        public static final int no_location_error=0x7f070039;
-        public static final int ok=0x7f070042;
-        public static final int progress_dialog_text=0x7f070032;
-        public static final int result_dialog_button_text=0x7f07002e;
-        public static final int result_dialog_text_canceled=0x7f070031;
-        public static final int result_dialog_text_default=0x7f070030;
-        public static final int result_dialog_text_with_id=0x7f07002f;
-        public static final int result_dialog_title=0x7f07002d;
-        public static final int select_meal=0x7f07002b;
-        public static final int select_picture=0x7f07003a;
-        public static final int settings=0x7f07002a;
-        public static final int single_user_selected=0x7f070033;
+        public static final int login=0x7f07001f;
+        public static final int no_location_error=0x7f07002d;
+        public static final int ok=0x7f070021;
+        public static final int progress_dialog_text=0x7f070025;
+        public static final int settings=0x7f070020;
         public static final int skip_login=0x7f07001c;
-        public static final int two_users_selected=0x7f070034;
     }
     public static final class style {
         public static final int com_facebook_loginview_default_style=0x7f080000;
