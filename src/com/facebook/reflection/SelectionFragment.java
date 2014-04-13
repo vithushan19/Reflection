@@ -259,7 +259,7 @@ public class SelectionFragment extends Fragment {
         // the native open graph share dialog.
         if (session != null && session.isOpened()) {
         	//Log.e(TAG,"new intent myactivitylist?");
-        	Intent intent = new Intent(getActivity(), MyListActivity.class);
+        	Intent intent = new Intent(getActivity(), SwipeActivity.class);
             startActivity(intent);
         	//handleGraphApiAnnounce();
         } else {
@@ -716,8 +716,7 @@ public class SelectionFragment extends Fragment {
         private void setUsersText() {
             String text = null;
             if (selectedUsers != null) {
-                text = String.format(getResources().getString(R.string.friends_selected),
-                        selectedUsers.get(0).getName());
+                text = selectedUsers.get(0).getName();
             }
             if (text == null) {
                 text = getResources().getString(R.string.action_people_default);
