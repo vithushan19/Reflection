@@ -42,6 +42,8 @@ import com.facebook.internal.Utility;
 import com.facebook.model.*;
 import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.ProfilePictureView;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,6 +51,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Fragment that represents the main selection screen for Scrumptious.
@@ -64,11 +67,11 @@ public class SelectionFragment extends Fragment {
     private static final String PENDING_ANNOUNCE_KEY = "pendingAnnounce";
     private static final Uri M_FACEBOOK_URL = Uri.parse("http://m.facebook.com");
     private static final int USER_GENERATED_MIN_SIZE = 480;
-
+    
     private static final int REAUTH_ACTIVITY_CODE = 100;
     private static final String PERMISSION = "publish_actions";
     
-    private String result;
+    private ArrayList<String> result;
 
     private Button announceButton;
     private ListView listView;
@@ -120,6 +123,7 @@ public class SelectionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        result = new ArrayList<String>();
         activity = (MainActivity) getActivity();
         uiHelper = new UiLifecycleHelper(getActivity(), sessionCallback);
         uiHelper.onCreate(savedInstanceState);
@@ -707,12 +711,31 @@ public class SelectionFragment extends Fragment {
                   new Request.Callback(){         
                       public void onCompleted(Response response) {
                           Log.i(TAG, "Result: " + response.toString());
-                          result = response.toString();
+                          Map<String, Object> result = response.getGraphObject().asMap();
+                          
+                          parseJson(result);
                       }                  
               }); 
               Request.executeBatchAsync(request);
-    
+              
 		}
+        
+        private void parseJson(Map<String,Object> results){
+        	JSONArray ar = (JSONArray) results.get("data");
+        	result.clear();
+        	for (int i = 0; i < ar.length(); i++){
+        		try {
+					JSONObject j = (JSONObject) ar.get(i);
+					
+					result.add(j.get("message").toString());
+					
+					
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
+        }
 
 		@Override
         protected void populateOGAction(OpenGraphAction action) {

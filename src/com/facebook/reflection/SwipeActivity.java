@@ -16,6 +16,8 @@ package com.facebook.reflection;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
+
 import com.facebook.reflection.R;
 import com.facebook.reflection.R.id;
 import com.facebook.reflection.R.layout;
@@ -50,7 +52,7 @@ public class SwipeActivity extends FragmentActivity implements ActionBar.TabList
      * time.
      */
     ViewPager mViewPager;
-    String result;
+    ArrayList<String> result;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +64,7 @@ public class SwipeActivity extends FragmentActivity implements ActionBar.TabList
 
         
         Intent intent = getIntent();
-        result = intent.getStringExtra("result");
+        result = intent.getStringArrayListExtra("result");
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
 
@@ -115,13 +117,13 @@ public class SwipeActivity extends FragmentActivity implements ActionBar.TabList
      */
     public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
-    	private String result;
+    	private ArrayList<String> result;
     	
         public AppSectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
-        public void setResult(String res) {
+        public void setResult(ArrayList<String> res) {
         	result = res;
         }
         @Override
@@ -132,7 +134,7 @@ public class SwipeActivity extends FragmentActivity implements ActionBar.TabList
                     Fragment fragment = new DummySectionFragment();
                     Bundle args = new Bundle();
                     args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);
-                    args.putString("result", result);
+                    args.putString("result", result.get(i));
                     fragment.setArguments(args);
                     return fragment;
             }
@@ -140,7 +142,7 @@ public class SwipeActivity extends FragmentActivity implements ActionBar.TabList
 
         @Override
         public int getCount() {
-            return 3;
+            return result.size();
         }
 
         @Override
